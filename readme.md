@@ -198,6 +198,97 @@ setTimeout(()=>{
 
 ```
 
+### children元素的规范
+
+1、在表格绘制时，使用如下格式规范进行填充，其中如果没有表头也需要保留表头标签`<thead></thead>`
+2、可以给标签添加style或class样式
+```html
+<table>
+  <thead>
+    <tr>
+      <th>标题1</th>
+      <th>标题2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>列1</td>
+      <td>列2</td>
+    </tr>
+    <tr>
+      <td>列1</td>
+      <td>列2</td>
+    </tr>
+  </tbody>
+</table>
+```
+3、将一组需要始终保持在一个页面内打印的内容，放在一个dom下，比如，如果希望下面2个dom在打印时始终打印在一张A4纸上不被分开，则必须将他们放在一个DOM组下
+```html
+<section>
+  123123
+  123123
+</section>
+<section>
+  abc
+  abc
+</section>
+```
+修改后:
+```html
+<hgroup>
+  <section>
+    123123
+    123123
+  </section>
+  <section>
+    abc
+    abc
+  </section>
+</hgroup>
+```
+
+4、整个children的内容可以大致如下：
+```html
+<h1>标题</h1>
+<table>
+  <thead>
+    <tr>
+      <th>标题1</th>
+      <th>标题2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>列1</td>
+      <td>列2</td>
+    </tr>
+    <tr>
+      <td>列1</td>
+      <td>列2</td>
+    </tr>
+  </tbody>
+</table>
+<h3>分隔标题</h3>
+<!-- 这个hgroup内的内容打印时会确保打印在一张纸上 -->
+<hgroup> 
+  <table>
+    <thead></thead>
+    <tbody>
+      <tr>
+        <td>申请人</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>收款人</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</hgroup>
+
+
+```
+
 ### Config  
 参数|说明|类型|默认值
 :-|:-|:-|:-
