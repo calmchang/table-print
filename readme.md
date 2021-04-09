@@ -1,6 +1,8 @@
 ![react](https://img.shields.io/badge/react-support-blue)
-![node](https://img.shields.io/badge/node-%3E%3D8-green)
-![npm](https://img.shields.io/badge/npm-%3E%3D6.14.5-orange)
+![js+dom](https://img.shields.io/badge/js+dom-support-red)
+![vue](https://img.shields.io/badge/vue-support-success)
+<!-- ![node](https://img.shields.io/badge/node-%3E%3D8-green)
+![npm](https://img.shields.io/badge/npm-%3E%3D6.14.5-orange) -->
 
 ### 简介
 table-print是一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等
