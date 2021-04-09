@@ -1,4 +1,6 @@
 
+nvm use v10.15.0
+
 npm run build
 
 git add -A
