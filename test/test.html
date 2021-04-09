@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+
+  <script src="../lib/index.js"></script>
+  <link rel="stylesheet" type="text/css" href='./test.css' />
+
+</head>
+<body>
+
+<script>
+window.onload=function(){
+  var table=`
+    <h1 class="title">
+      产品申请单
+      <span>2021-01-01</span>
+    </h1>
+    <table >
+      <thead></thead>
+      <tbody class="applyInfo" >
+        <tr>
+          <td>申请人</td>
+          <td>测试人</td>
+          <td>申请人部门</td>
+          <td>测试部门</td>
+        </tr>
+        <tr>
+          <td>总额</td>
+          <td>￥123.00</td>
+          <td>备注</td>
+          <td>123123</td>
+        </tr>
+      </tbody>
+    </table>
+    <table className="itemList">
+    <thead>
+      <tr>
+        <th>产品编码</th>
+        <th>产品名称</th>
+        <th>产品型号</th>
+        <th>单价(￥)</th>
+        <th>内采数量</th>
+        <th>总价(￥)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @list
+    </tbody>
+  </table>
+    <hgroup>
+      <div>确认签字</div>
+      <table>
+        <thead></thead>
+        <tbody>
+          <tr>
+            <td>申请人</td>
+            <td></td>
+            <td>收单人</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>上级审批</td>
+            <td></td>
+            <td>CEO确认</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </hgroup>
+    `
+
+  let list='';
+  for(let i=0;i<40;i++){
+    var dom = `
+      <tr>
+        <td>${i}</td>
+        <td>${i}</td>
+        <td>${i}</td>
+        <td>${i}</td>
+        <td>${i}</td>
+        <td>${i}</td>
+      </tr>
+      `
+      list+=dom;
+  }
+  table=table.replace('@list',list);
+  
+  
+
+  document.body.innerHTML = table;
+  var TablePrint = TablePrint||window['table-print'].default;
+  let plugin = new TablePrint({
+    children:document.body.children,
+    footer:true,
+    water:true,
+  });
+  setTimeout(()=>{
+    plugin.print();
+  },0)
+}
+  </script>
+</body>
+</html>
