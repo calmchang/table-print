@@ -1,6 +1,6 @@
 {
   "name": "table-print",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "dev": "webpack-dev-server --config test.config.js",
