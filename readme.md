@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/badge/npm-%3E%3D6.14.5-orange) -->
 
 ### 简介
-table-print是一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等
+js-table-print是一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等
 
 ### 环境支持  
 1、react  
@@ -24,7 +24,7 @@ table-print是一款智能打印插件，目标是处理表格的打印，实现
 ![review.jpg](http://img.vuedata.cn/table-print.gif)
 
 ### install    
-`npm install table-print`
+`npm install js-table-print`
 
 ### usage  
 ```javascript
@@ -41,7 +41,7 @@ setTimeout(()=>{
 ### with React  
 
 ```javascript
-import TablePrint from 'table-print';
+import TablePrint from 'js-table-print';
 
 class Demo extends React.Component {
   constructor(props) {
@@ -137,7 +137,7 @@ ReactDOM.render(<Demo />, document.getElementById("container"));
 ### with javascript  
 
 ```javascript
-<script src="table-print.js"></script>
+<script src="js-table-print.js"></script>
 <link rel="stylesheet" type="text/css" href='mytable.css' />
 
 var table=`
@@ -185,7 +185,7 @@ var table=`
 `
 document.body.innerHTML = table;
 
-var TablePrint = TablePrint||window['table-print'].default;
+var TablePrint = TablePrint||window['js-table-print'].default;
 let plugin = new TablePrint({
   children:document.body.children,
   footer:true,

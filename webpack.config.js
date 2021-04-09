@@ -12,7 +12,7 @@ module.exports = {
     umdNamedDefine: true,
     path: path.resolve(__dirname, 'lib'),
     filename: 'index.js',
-    library:'table-print',
+    library:'js-table-print',
   },
   externals:{
     'react': {

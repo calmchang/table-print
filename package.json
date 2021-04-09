@@ -42,7 +42,14 @@
   "keywords": [
     "react",
     "print",
-    "jqprint"
+    "jqprint",
+    "table-print",
+    "print-table",
+    "printjs",
+    "jsprint",
+    "js-print",
+    "js-table-print",
+    "table"
   ],
   "description": "一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等",
   "engines": {

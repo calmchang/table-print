@@ -91,7 +91,7 @@ window.onload=function(){
   
 
   document.body.innerHTML = table;
-  var TablePrint = TablePrint||window['table-print'].default;
+  var TablePrint = TablePrint||window['js-table-print'].default;
   let plugin = new TablePrint({
     children:document.body.children,
     footer:true,
