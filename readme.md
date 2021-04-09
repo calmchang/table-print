@@ -6,25 +6,25 @@
 table-print是一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等
 
 ### 环境支持  
-1、react
+1、react  
 2、原生js+dom
 
 ### 功能列表  
-1、设定某些DOM节点组成一组，必须打印在同一张页面内，如果被切割则会重新分页打印。
-2、提供页头和页尾样式，也可自定义样式。
-3、提供分页出的水印样式，也可自定义样式。
-4、可调整页边距
-5、可设定横向或纵向打印
-6、样式完全根据当前页面样式打印，无需再次单独导入css
+1、设定某些DOM节点组成一组，必须打印在同一张页面内，如果被切割则会重新分页打印。  
+2、提供页头和页尾样式，也可自定义样式。  
+3、提供分页出的水印样式，也可自定义样式。  
+4、可调整页边距  
+5、可设定横向或纵向打印  
+6、样式完全根据当前页面样式打印，无需再次单独导入css  
 
 
-### 预览图
+### 预览图  
 ![review.jpg](http://img.vuedata.cn/table-print.gif)
 
-### install  
+### install    
 `npm install table-print`
 
-### usage
+### usage  
 ```javascript
 let plugin = new TablePrint({
   children:domTable,
@@ -36,7 +36,7 @@ setTimeout(()=>{
 },0)
 ```
 
-### with React
+### with React  
 
 ```javascript
 import TablePrint from 'table-print';
@@ -132,7 +132,7 @@ ReactDOM.render(<Demo />, document.getElementById("container"));
 ```
 
 
-### with javascript
+### with javascript  
 
 ```javascript
 <script src="table-print.js"></script>
@@ -196,7 +196,7 @@ setTimeout(()=>{
 
 ```
 
-### Config
+### Config  
 参数|说明|类型|默认值
 :-|:-|:-|:-
 landscape|是否为横向布局|boolean|false
@@ -207,10 +207,10 @@ children|打印的内容|[Documents]|-
 water|分页水印|boolean\|Document|false
 waterHeight|水印高度|Number|-
 
-### 开发者环境
-node:10.15.0
+### 开发者环境  
+node:10.15.0  
 npm:6.14.5
 
 
-### 更新日志
+### 更新日志  
 * v1.0.0 发布
