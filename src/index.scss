@@ -7,10 +7,12 @@
 .A4landscape{
   width:296mm;
   height:209mm;
+  position: relative;
 }
 .A4{
   height:296mm;
   width:209mm;
+  position: relative;
 }
 
 @media print{
@@ -20,6 +22,7 @@
 }
 @media screen{
   .table-print-src{
+    position: relative;
     margin:20px;
   }
   .A4,
@@ -30,6 +33,7 @@
 $borderTableColor:#888;
 
 .table-print-root{
+  position: relative;
   table{
     width:100%;
     border:3px solid $borderTableColor;
