@@ -28,25 +28,28 @@
   }
 }
 $borderTableColor:#888;
-table{
-  width:100%;
-  border:3px solid $borderTableColor;
-  border-collapse:collapse;  
-  border-spacing:0;  
-  
-  &+table{
-    border-top:0;
-  }
 
-  th,
-  td{
-    padding:10px;
-    border-bottom:1px solid $borderTableColor
-  }
-  th,
-  td{
-    &:not(:last-child){
-      border-right: 1px solid $borderTableColor;
+.table-print-root{
+  table{
+    width:100%;
+    border:3px solid $borderTableColor;
+    border-collapse:collapse;  
+    border-spacing:0;  
+    
+    &+table{
+      border-top:0;
+    }
+
+    th,
+    td{
+      padding:10px;
+      border-bottom:1px solid $borderTableColor
+    }
+    th,
+    td{
+      &:not(:last-child){
+        border-right: 1px solid $borderTableColor;
+      }
     }
   }
 }
