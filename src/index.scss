@@ -1,3 +1,8 @@
+$PAGE_SIZE_W:210mm;
+$PAGE_SIZE_H:294mm;
+
+$PAGE_SIZE_LAND_W:297mm;
+$PAGE_SIZE_LAND_H:171mm;
 
 @page
 {
@@ -5,20 +10,36 @@
 }
 
 .A4landscape{
-  width:296mm;
-  height:209mm;
+  height:$PAGE_SIZE_LAND_H;
+  width:$PAGE_SIZE_LAND_W;
   position: relative;
+  padding:30mm 15mm 30mm 15mm;
+  // page-break-after: always;
 }
 .A4{
-  height:296mm;
-  width:209mm;
+  height:$PAGE_SIZE_H;
+  width:$PAGE_SIZE_W;
   position: relative;
+  padding:30mm 15mm 15mm 15mm;
 }
+
 
 @media print{
   body > *:not(.table-print-root){
     display:none !important;
   }
+  .A4,
+  .A4landscape{
+    // border:5mm solid green;
+    // margin:0 0 0 20mm;
+  }
+  html,body{
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    outline: 0 !important;
+  }
+
 }
 @media screen{
   .table-print-src{
@@ -27,9 +48,63 @@
   }
   .A4,
   .A4landscape{
-    border:1px solid green;
+    border:1px dashed red;
   }
 }
+
+.table-print-dialog{
+  position:absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 99;
+  left:0;
+  top:10px;
+  width:70%;
+  height:720px;
+  // height:70%;
+  background-color: white;
+  overflow: scroll;
+  transform: translateX(25%);
+  // border:5px solid black;
+  box-shadow: 0px 0px 10px 2px #555;
+  padding:24px 4px;
+  .table-print-dialog-title{
+    padding:8px 0;
+  }
+  .table-print-dialog-btn-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .table-print-dialog-btn-ok,
+    .table-print-dialog-btn-cancel{
+      min-width:32px;
+      height: 32px;
+      padding:0 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #1890ff;
+      color:white;
+      border-radius: 4px;
+      font-size: 14px;
+      &:not(:last-child){
+        margin-right: 4px;
+      }
+
+    }
+  }
+
+}
+.table-print-src{
+  .table-print-src-content{
+    width:100%;
+    height:100%;
+  }
+}
+
+
 $borderTableColor:#888;
 
 .table-print-root{
@@ -58,6 +133,7 @@ $borderTableColor:#888;
   }
 }
 
+
 // .splitPage{
 //   page-break-after:always;
 // }
@@ -74,12 +150,14 @@ $borderTableColor:#888;
   top:.5cm;
   left:0;
   width:100%;
+  box-sizing: border-box;
 }
 .table-print-footer{
   position: absolute;
-  bottom:.5cm;
+  bottom:2cm;
   left:0;
   width:100%;
+  box-sizing: border-box;
 }
 .table-print-footer-content{
   text-align: center;

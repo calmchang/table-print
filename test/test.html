@@ -10,7 +10,11 @@
 
 </head>
 <body>
+<button id="ok1">横向打印</button>
+<button id="ok2">竖向打印</button>
+<section id="print">
 
+</section>
 <script>
 window.onload=function(){
   var table=`
@@ -70,10 +74,54 @@ window.onload=function(){
         </tbody>
       </table>
     </hgroup>
+  
+    <table className="itemList">
+    <thead>
+      <tr>
+        <th>产品编码2</th>
+        <th>产品名称</th>
+        <th>产品型号</th>
+        <th>单价(￥)</th>
+        <th>内采数量</th>
+        <th>总价(￥)</th>
+      </tr>
+    </thead>
+    <tbody>
+      @list
+    </tbody>
+  </table>
+
+  <hgroup >
+      <div>确认签字2</div>
+      <table>
+        <thead></thead>
+        <tbody>
+          <tr>
+            <td>申请人</td>
+            <td></td>
+            <td>收单人</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>上级审批</td>
+            <td></td>
+            <td>CEO确认</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>上级审批</td>
+            <td></td>
+            <td>CEO确认</td>
+            <td></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </hgroup>
     `
 
   let list='';
-  for(let i=0;i<40;i++){
+  for(let i=0;i<15;i++){
     var dom = `
       <tr>
         <td>${i}</td>
@@ -87,20 +135,44 @@ window.onload=function(){
       list+=dom;
   }
   table=table.replace('@list',list);
+  table=table.replace('@list',list);
   
   
+  var domPrint = document.querySelector('#print');
+  domPrint.innerHTML = table;
 
-  document.body.innerHTML = table;
+  var header = document.createElement('div');
+  header.innerText='上海XXXX有限公司';
+  header.className='title';
+
   var TablePrint = TablePrint||window['js-table-print'].default;
-  let plugin = new TablePrint({
-    children:document.body.children,
-    footer:true,
-    water:true,
-  });
-  setTimeout(()=>{
-    plugin.print();
-  },0)
+  var landscape=true;
+
+
+  function DoPrint(){
+    let plugin = new TablePrint({
+      children:domPrint.children,
+      header:header,
+      footer:true,
+      landscape:landscape,
+      water:true,
+      debug:false
+    });
+    plugin.print(false);
+  }
+
+  document.querySelector('#ok1').onclick=function(){
+    landscape=true;
+    DoPrint();
+  }
+  document.querySelector('#ok2').onclick=function(){
+    landscape=false;
+    DoPrint();
+  }
 }
+
+
+
   </script>
 </body>
 </html>

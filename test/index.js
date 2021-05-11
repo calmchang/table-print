@@ -36,7 +36,7 @@ class Table extends React.Component{
   constructor(props) {
     super(props);
     let list=[];
-    for(let i=0;i<40;i++){
+    for(let i=0;i<4;i++){
       list.push({id:i,name:i,type:i,price:i,count:i,total:i})
     }
     this.state={

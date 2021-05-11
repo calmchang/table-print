@@ -1,10 +1,18 @@
 import './index.scss';
 
-const A4_MARGIN=1.5;
-const A4_HEIGHT=297-A4_MARGIN-A4_MARGIN;
-const A4_WIDTH=210-A4_MARGIN-A4_MARGIN;
-const A4_LANDSCAPE_WIDTH=A4_HEIGHT;
-const A4_LANDSCAPE_HEIGHT=A4_WIDTH;
+const __PAGE_W=210;
+const __PAGE_H=294;
+
+const __PAGE_LAND_W=297;
+const __PAGE_LAND_H=171;
+
+
+const A4_HEIGHT=__PAGE_H;
+const A4_WIDTH=__PAGE_W;
+
+const A4_LANDSCAPE_WIDTH=__PAGE_LAND_W;
+const A4_LANDSCAPE_HEIGHT=__PAGE_LAND_H;
+
 const DOM_ROOT='table-print-root';
 const DOM_SRC_TABLE='table-print-src';
 const DOM_HEADER='table-print-header';
@@ -12,7 +20,6 @@ const DOM_FOOTER='table-print-footer';
 
 class TablePrint{
   constructor({
-    padding=40,
     landscape=false,
     footer=null,
     header=null,
@@ -24,7 +31,6 @@ class TablePrint{
     }) {
     
     this.state={
-      padding,
       landscape,
       children,
       footer,
@@ -39,9 +45,10 @@ class TablePrint{
     this.footer_default = document.createElement('footer');
     this.footer_default.className="table-print-footer-content";
     this.footer_default.innerHTML=`@page/@total`;
+    this.dialog=null;
   }
   mm2px(mm) {
-    let targetDom = this.state.targetDom.querySelector(`#${DOM_SRC_TABLE}`);
+    let targetDom = document.querySelector(`#${DOM_SRC_TABLE}`);
     var tmpNode = document.createElement('div');
     tmpNode.style.cssText = `width:1mm;height:${mm}mm;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden`;
     targetDom.appendChild(tmpNode);
@@ -51,7 +58,7 @@ class TablePrint{
     return h;
   }
   preRenderGetHeight(dom) {
-    let targetDom = this.state.targetDom.querySelector(`#${DOM_SRC_TABLE}`);
+    let targetDom = document.querySelector(`#${DOM_SRC_TABLE}`);
 
     var tmpNode = document.createElement('div');
     tmpNode.style.cssText = `position:absolute;left:0px;top:0px;z-index:99;visibility:hidden`;
@@ -80,70 +87,123 @@ class TablePrint{
   moveDom(dom,pageList,maxHeight){
     let height =dom.offsetHeight;
     let page = pageList[pageList.length-1];
+
+    const addNewPage=(pageList,dom,height,maxHeight)=>{
+      let newPage={children:[],curHeight:0,maxHeight:maxHeight};
+      pageList.push(newPage);
+      newPage.children.push(dom);
+      newPage.curHeight+=height;
+    }
+    if(dom.style.pageBreakBefore==='always'){
+      addNewPage(pageList,dom,height,maxHeight);
+      return;
+    }
+
     if(page.curHeight + height < maxHeight){
       page.children.push(dom);
       page.curHeight+=height;
-    }else{
-      if(dom.nodeName.toLocaleLowerCase()==='table'){
-        let thead=this.getThead(dom);
-        let tbody=this.getTBody(dom);
+      return;
+    }
 
-        const createNewTable=()=>{
-          let newTable=dom.cloneNode();
-          let newTBody = tbody.cloneNode();
-          newTable.appendChild(thead.cloneNode(true));
-          newTable.appendChild(newTBody);
-          return {
-            table:newTable,
-            tbody:newTBody
-          }
-        }
+    if(dom.nodeName.toLocaleLowerCase()==='table'){
+      let thead=this.getThead(dom);
+      let tbody=this.getTBody(dom);
 
-        let curTable = createNewTable();
-        for(let i=0;i<tbody.children.length;i++){
-          let tr = tbody.children[i].cloneNode(true);
-          curTable.tbody.appendChild(tr);
-          let curH = this.preRenderGetHeight(curTable.table);
-          if(page.curHeight + curH > maxHeight){
-            if(tbody.children.length>1){
-              curTable.tbody.removeChild(tr);
-              page.children.push(curTable.table);
-              let newPage={children:[],curHeight:0,maxHeight:maxHeight};
-              pageList.push(newPage);
-              page = newPage;
-              curTable = createNewTable();
-              i--;
-              
-            }else{
-              let newPage={children:[],curHeight:0,maxHeight:maxHeight};
-              pageList.push(newPage);
-              page = newPage;
-              page.children.push(curTable.table);
-              page.curHeight+=curH;
-              curTable = createNewTable();
-            }
-            
-          }
+      const createNewTable=()=>{
+        let newTable=dom.cloneNode();
+        let newTBody = tbody.cloneNode();
+        newTable.appendChild(thead.cloneNode(true));
+        newTable.appendChild(newTBody);
+        return {
+          table:newTable,
+          tbody:newTBody
         }
-        if(curTable.tbody.children.length>0){
-          let curH = this.preRenderGetHeight(curTable.table);
-          page.children.push(curTable.table);
-          page.curHeight+=curH;
-        }
-      }else{
-        let newPage={children:[],curHeight:0,maxHeight:maxHeight};
-        pageList.push(newPage);
-        newPage.children.push(dom);
-        newPage.curHeight+=height;
       }
+
+      let curTable = createNewTable();
+      for(let i=0;i<tbody.children.length;i++){
+        let tr = tbody.children[i].cloneNode(true);
+        curTable.tbody.appendChild(tr);
+        let curH = this.preRenderGetHeight(curTable.table);
+        if(page.curHeight + curH > maxHeight){
+          if(tbody.children.length>1){
+            curTable.tbody.removeChild(tr);
+            page.children.push(curTable.table);
+            let newPage={children:[],curHeight:0,maxHeight:maxHeight};
+            pageList.push(newPage);
+            page = newPage;
+            curTable = createNewTable();
+            i--;
+            
+          }else{
+            let newPage={children:[],curHeight:0,maxHeight:maxHeight};
+            pageList.push(newPage);
+            page = newPage;
+            page.children.push(curTable.table);
+            page.curHeight+=curH;
+            curTable = createNewTable();
+          }
+          
+        }
+      }
+      if(curTable.tbody.children.length>0){
+        let curH = this.preRenderGetHeight(curTable.table);
+        page.children.push(curTable.table);
+        page.curHeight+=curH;
+      }
+    }else{
+      addNewPage(pageList,dom,height,maxHeight)
     }
     
+    
   }
-  print(){
-    this.render();
-    let {PAGE_HEIGHT,padding,landscape}=this.state;
-    let ref = this.state.targetDom.querySelector(`#${DOM_SRC_TABLE}`);
-    let pageHeight = this.mm2px(PAGE_HEIGHT)-padding-padding;
+
+  debugPrint(){
+    let root = document.createElement('section');
+    root.className=DOM_ROOT;
+    root.id=DOM_ROOT;
+    this.state.targetDom.appendChild(root);
+
+    const borderConfig=[
+      ['red','green'],
+      ['blue','black']
+    ]
+    // let ref = this.state.targetDom.querySelector(`#${DOM_SRC_TABLE}`);
+    // let {landscape}=this.state;
+    let landscape=false;
+    const pageClass = landscape?'A4landscape':'A4'
+    for(let i=0;i<3;i++){
+      let page = document.createElement('section');
+      page.className=`${DOM_SRC_TABLE} ${pageClass}`;
+      // page.style.border=`5mm solid ${borderConfig[i%2][0]}`;
+      page.style.padding="5mm";
+
+      let content = document.createElement('div');
+      // content.style.border=`1px solid ${borderConfig[i%2][1]}`;
+      // content.style.width='100%';
+      // content.style.height='100%';
+      // content.className='content';
+      // content.innerText = `${i}:5mm bottom 5mm`;
+      // page.append(content);
+      page.innerText='1231'
+
+      root.appendChild(page);
+    }
+
+    window.print();
+
+    // ref.style.display='none';
+   
+  }
+
+  print(review=false){
+    let printRoot = this.createPrintRootDom(review);
+    this.showDialog(printRoot,review);
+
+
+    let {PAGE_HEIGHT,landscape}=this.state;
+    let ref = document.querySelector(`#${DOM_SRC_TABLE}`);
+    let pageHeight = landscape?this.mm2px(PAGE_HEIGHT-30-30):this.mm2px(PAGE_HEIGHT-30-15);
     let pageList=[{children:[],curHeight:0,maxHeight:pageHeight}];
     for(let i=0;i<ref.children.length;i++){
       this.moveDom(ref.children[i],pageList,pageHeight)
@@ -176,14 +236,11 @@ class TablePrint{
     for(let i=0;i<pageList.length;i++){
       let page = document.createElement('section');
       page.className=`${DOM_SRC_TABLE} ${pageClass}`;
-      page.style.padding=padding+'px';
 
       let headerBox = document.createElement('div');
       headerBox.className=`${DOM_HEADER}`;
-      headerBox.style.padding=`0 ${padding}px`;
       let footerBox = document.createElement('div');
       footerBox.className=`${DOM_FOOTER}`;
-      footerBox.style.padding=`0 ${padding}px`;
 
       page.appendChild(headerBox);
       page.appendChild(footerBox);
@@ -213,13 +270,16 @@ class TablePrint{
           page.appendChild(waterBox.cloneNode(true));
         }
       }
-      this.state.targetDom.querySelector(`#${DOM_ROOT}`).appendChild(page);
+      this.dialog.querySelector(`#${DOM_ROOT}`).appendChild(page);
     }
     ref.style.display='none';
-    window.print();
-    if(!this.state.debug){
-      document.body.removeChild(document.querySelector('#table-print-root'));
+
+    if(!review){
+      this.doPrint();
+      return;
     }
+
+
   }
 
   rand(min, max, seed) {
@@ -230,7 +290,63 @@ class TablePrint{
     return ret;
   }
 
-  render() {
+  closeDialog(){
+    if(!this.dialog)return;
+    document.body.removeChild(this.dialog);
+    this.dialog=null;
+  }
+
+  doPrint(){
+    let printDom = document.querySelector('#table-print-root');
+    document.body.appendChild(printDom);
+    this.closeDialog();
+    window.print();
+    document.body.removeChild(printDom);
+    
+  }
+  showDialog(dom,review){
+    let root = document.createElement('section');
+    root.className='table-print-dialog';
+    root.id='table-print-dialog';
+   
+    this.dialog=root;
+
+    var btnGroup = document.createElement('hgroup');
+    btnGroup.className="table-print-dialog-btn-group";
+
+    var btnCancel = document.createElement('div');
+    btnCancel.className='table-print-dialog-btn-cancel';
+    btnCancel.innerText='取消'
+
+    var btnOk = document.createElement('div');
+    btnOk.className='table-print-dialog-btn-ok';
+    btnOk.innerText='打印'
+    
+    var btnCancel = document.createElement('div');
+    btnCancel.className='table-print-dialog-btn-cancel';
+    btnCancel.innerText='取消'
+
+    btnGroup.appendChild(btnOk);
+    btnGroup.appendChild(btnCancel);
+
+    var title = document.createElement('div');
+    title.className='table-print-dialog-title';
+    title.innerText='打印预览'
+    root.appendChild(title);
+    root.appendChild(btnGroup);
+    root.appendChild(dom);
+
+    btnOk.onclick=()=>{
+      this.doPrint();
+    }
+    btnCancel.onclick=()=>{
+      this.closeDialog();
+    }
+    
+    document.body.appendChild(root);
+
+  }
+  createPrintRootDom() {
     const {landscape,children} = this.state;
     const pageClass = landscape?'A4landscape':'A4'
     let root = document.createElement('section');
@@ -244,7 +360,9 @@ class TablePrint{
       printSrc.appendChild(children[i].cloneNode(true));
     }
     root.appendChild(printSrc);
-    this.state.targetDom.appendChild(root);
+
+    return root;
+    // this.state.targetDom.appendChild(root);
   }
 }
 
