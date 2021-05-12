@@ -293,12 +293,18 @@ setTimeout(()=>{
 参数|说明|类型|默认值
 :-|:-|:-|:-
 landscape|是否为横向布局|boolean|false
-padding|页边距|String|40
 footer|页脚|boolean\|Dom|false
 header|页头|boolean\|Dom|false
 children|打印的内容|[Documents]|-
 water|分页水印|boolean\|Document|false
 waterHeight|水印高度|Number|-
+debug|调试模式，调试模式下会将表格打印的预览图追加到body后面|boolean|false
+
+### API   
+
+方法|说明|类型  
+:-|:-|:-|:-
+print |激活打印 review为true时会弹出预览框确认|(review?:boolean)
 
 ### 开发者环境  
 node:10.15.0  
@@ -306,4 +312,5 @@ npm:6.14.5
 
 
 ### 更新日志  
+* v1.1.2 发布修正了打印格式化的一些bug，并增加弹出预览框    
 * v1.0.0 发布
