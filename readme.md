@@ -302,9 +302,9 @@ debug|调试模式，调试模式下会将表格打印的预览图追加到body�
 
 ### API   
 
-方法|说明|类型  
-:-|:-|:-|:-
-print |激活打印 review为true时会弹出预览框确认|(review?:boolean)
+方法|说明|类型
+:-|:-|:-
+print|激活打印 review为true时会弹出预览框确认|(review?:boolean)
 
 ### 开发者环境  
 node:10.15.0  
