@@ -23,8 +23,7 @@ window.onload=function(){
       <span>2021-01-01</span>
     </h1>
     <table >
-      <thead></thead>
-      <tbody class="applyInfo" >
+      <tbody>
         <tr>
           <td>申请人</td>
           <td>测试人</td>
@@ -39,7 +38,7 @@ window.onload=function(){
         </tr>
       </tbody>
     </table>
-    <table className="itemList">
+    <table>
     <thead>
       <tr>
         <th>产品编码</th>
@@ -57,7 +56,6 @@ window.onload=function(){
     <hgroup>
       <div>确认签字</div>
       <table>
-        <thead></thead>
         <tbody>
           <tr>
             <td>申请人</td>
@@ -75,7 +73,7 @@ window.onload=function(){
       </table>
     </hgroup>
   
-    <table className="itemList">
+    <table>
     <thead>
       <tr>
         <th>产品编码2</th>
@@ -156,9 +154,9 @@ window.onload=function(){
       footer:true,
       landscape:landscape,
       water:true,
-      debug:false
+      debug:true
     });
-    plugin.print(false);
+    plugin.print(true);
   }
 
   document.querySelector('#ok1').onclick=function(){

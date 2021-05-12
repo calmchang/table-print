@@ -1,8 +1,13 @@
+
+.row{
+  display: flex;
+  align-items: center;
+}
 .btn{
   background:#2a96fc;
   border-radius:5px;
   padding:5px;
-  width: 60px;
+  width: 80px;
   height:30px;
   display: flex;
   justify-content: center;
@@ -43,6 +48,7 @@
   }
 }
 .userTable {
+  page-break-inside: avoid;
   td {
     padding: 10px;
   }
@@ -76,3 +82,41 @@
   width:150px;
   opacity: .8;
 }
+
+.noPage
+{
+  page-break-inside: avoid;
+}
+
+
+$borderTableColor:black;
+table{
+  *{
+    position: relative;
+    box-sizing: border-box;
+  }
+  width:100%;
+  border:2px solid $borderTableColor;
+  border-collapse:collapse;  
+  border-spacing:0; 
+}
+table+table{
+  border-top: 0;
+}
+
+th,
+td
+{
+  padding:10px;
+  border-bottom:1px solid $borderTableColor;
+  border-right:1px solid $borderTableColor;
+}
+th:last-child ,
+td:last-child {
+  border-right:0;
+
+}
+
+tr:last-child td{
+  border-bottom: 0;
+}  

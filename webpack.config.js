@@ -2,9 +2,12 @@ const path = require('path');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
+
+const devMode = process.env.env_package !== 'prod';
+
 module.exports = {
-  mode: 'production',//'production','development'//打包模式，开发模式下不压缩
+  mode: devMode?'development':'production',//'production','development'//打包模式，开发模式下不压缩
   // devtool: 'inline-source-map',//sourcemap模式
   entry: {index:'./src/index.js'},
   output: {
@@ -72,7 +75,7 @@ module.exports = {
     ]
   },
   optimization:{
-    minimize: true , // 是否压缩js
+    minimize: !devMode , // 是否压缩js
     minimizer: [
       new TerserPlugin({
         parallel:true,

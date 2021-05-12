@@ -24,7 +24,7 @@ class Header extends React.Component{
   }
   render(){
     return (
-      <header className="table-print-header-content">
+      <header style={{padding:"15px 0",marginBottom:"4px",borderBottom:"3px solid black"}}>
         上海阿里妈妈爸爸有限公司
       </header>
     )
@@ -36,7 +36,7 @@ class Table extends React.Component{
   constructor(props) {
     super(props);
     let list=[];
-    for(let i=0;i<4;i++){
+    for(let i=0;i<12;i++){
       list.push({id:i,name:i,type:i,price:i,count:i,total:i})
     }
     this.state={
@@ -48,10 +48,10 @@ class Table extends React.Component{
     const {list} = this.state;
     return (
       <section>
-        <h1 className="title">
+        {/* <h1 className="title">
           产品申请单
           <span className="time">2021-01-01</span>
-        </h1>
+        </h1> */}
         <table className="applyInfo">
           <thead></thead>
           <tbody >
@@ -69,7 +69,10 @@ class Table extends React.Component{
             </tr>
           </tbody>
         </table>
-        <div className="label">详情</div>
+        
+        <table className="noPage">详情3</table>
+
+
         <table className="itemList">
           <thead>
             <tr>
@@ -98,9 +101,15 @@ class Table extends React.Component{
             }
           </tbody>
         </table>
-        <div className="label">使用人</div>
+        
+        <table className="noPage" border="1">
+          <p>详情3</p>
+          <p>详情3</p>
+          <p>详情3</p>
+        </table>
+        
+
         <table className="userTable">
-          <thead></thead>
           <tbody>
             <tr>
               <td rowSpan='2'>市场部</td>
@@ -126,8 +135,10 @@ class Table extends React.Component{
             </tr>
           </tbody>
         </table>
-        <hgroup className="sign">
-          <div className="label">确认签字</div>
+        <hgroup className="sign noPage">
+          
+          <table className="noPage">详情3</table>
+          
           <table>
             <thead></thead>
             <tbody>
@@ -171,9 +182,8 @@ class Demo extends React.Component {
     }
   }
   componentDidMount(){
-    window.onPrint=this.onPrint;
   }
-  onPrint(){
+  onPrint(landscape){
     let table = React.createElement(Table,{},null)
     let domTable = document.createElement('section');
     domTable.style.display='contents';
@@ -196,18 +206,17 @@ class Demo extends React.Component {
     
   
     let plugin = new ReactPrintAutoPlugin({
-      landscape:false,
-      padding:40,
+      landscape:landscape,
       children:domTable.children[0].children,
       footer:true,//domFooter.children[0],
-      // header:domHeader.children[0],
+      header:domHeader.children[0],
       water:true,//domWater,
-      // waterHeight:150,
-      // debug:true
+      waterHeight:150,
+      debug:true
     });
     
     setTimeout(()=>{
-      plugin.print();
+      plugin.print(true);
     },0)
   }
   
@@ -215,7 +224,10 @@ class Demo extends React.Component {
   render() {
     return (
       <div>
-        <div className="btn" onClick={this.onPrint.bind(this)}>打印</div>
+        <hgroup className='row'>
+          <div className="btn" onClick={this.onPrint.bind(this,false)}>打印-竖向</div>
+          <div className="btn" onClick={this.onPrint.bind(this,true)}>打印-横向</div>
+        </hgroup>
         <Table />
       </div>
     );

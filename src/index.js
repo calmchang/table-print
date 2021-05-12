@@ -1,33 +1,19 @@
 import './index.scss';
 
-const __PAGE_W=210;
-const __PAGE_H=294;
-
-const __PAGE_LAND_W=297;
-const __PAGE_LAND_H=171;
-
-
-const A4_HEIGHT=__PAGE_H;
-const A4_WIDTH=__PAGE_W;
-
-const A4_LANDSCAPE_WIDTH=__PAGE_LAND_W;
-const A4_LANDSCAPE_HEIGHT=__PAGE_LAND_H;
 
 const DOM_ROOT='table-print-root';
 const DOM_SRC_TABLE='table-print-src';
-const DOM_HEADER='table-print-header';
-const DOM_FOOTER='table-print-footer';
+
 
 class TablePrint{
   constructor({
     landscape=false,
     footer=null,
     header=null,
-    targetDom=document.body,
     children=[],
     water=null,
     debug=false,
-    waterHeight=0,
+    waterHeight=0
     }) {
     
     this.state={
@@ -35,28 +21,41 @@ class TablePrint{
       children,
       footer,
       header,
-      targetDom,
       water,
-      waterHeight,
-      PAGE_HEIGHT:landscape?A4_LANDSCAPE_HEIGHT:A4_HEIGHT,
-      PAGE_WIDTH:landscape?A4_LANDSCAPE_WIDTH:A4_WIDTH,
       debug,
+      waterHeight
     };
-    this.footer_default = document.createElement('footer');
+    this.footer_default = document.createElement('p');
     this.footer_default.className="table-print-footer-content";
     this.footer_default.innerHTML=`@page/@total`;
     this.dialog=null;
+    this.oldPageSize=null;
   }
+  
+  getDomHeight(dom){
+    let height = dom.offsetHeight;
+
+    let currentStyle = dom.currentStyle||document.defaultView.getComputedStyle(dom);
+    let marginTop = currentStyle['marginTop'].match(/(\d+)/g);
+    marginTop = marginTop?+marginTop[0]:0;
+    let marginBottom = currentStyle['marginBottom'].match(/(\d+)/g);
+    marginBottom = marginBottom?+marginBottom[0]:0;
+    height+=marginTop+marginBottom;
+
+    return height;
+  }
+  //将mm单位转换为px单位
   mm2px(mm) {
     let targetDom = document.querySelector(`#${DOM_SRC_TABLE}`);
     var tmpNode = document.createElement('div');
     tmpNode.style.cssText = `width:1mm;height:${mm}mm;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden`;
     targetDom.appendChild(tmpNode);
-    let h = parseInt(tmpNode.offsetHeight);
+    let h = this.getDomHeight(tmpNode);
     tmpNode.parentNode.removeChild(tmpNode);
-    console.log(`${mm}->${h}px`)
     return h;
   }
+
+  //计算这个dom绘制后会占用多少高度px
   preRenderGetHeight(dom) {
     let targetDom = document.querySelector(`#${DOM_SRC_TABLE}`);
 
@@ -64,30 +63,28 @@ class TablePrint{
     tmpNode.style.cssText = `position:absolute;left:0px;top:0px;z-index:99;visibility:hidden`;
     tmpNode.appendChild(dom);
     targetDom.appendChild(tmpNode);
-    let h = parseInt(tmpNode.offsetHeight);
+    let h = this.getDomHeight(tmpNode);
     tmpNode.parentNode.removeChild(tmpNode);
     return h;
   }
   
   getThead(dom){
-    if(dom.children[0].nodeName.toLocaleLowerCase()==='thead'){
+    if(dom.children[0]&&dom.children[0].nodeName.toLocaleLowerCase()==='thead'){
       return dom.children[0];
     }
     return null;
   }
   getTBody(dom){
-    if(dom.children[1].nodeName.toLocaleLowerCase()==='tbody'){
+    if(dom.children[1].nodeName&&dom.children[1].nodeName.toLocaleLowerCase()==='tbody'){
       return dom.children[1];
     }
     return null;
   }
-  getAllTr(tbody){
-    return tbody.children;
-  }
-  moveDom(dom,pageList,maxHeight){
-    let height =dom.offsetHeight;
-    let page = pageList[pageList.length-1];
 
+  moveDom(dom,pageList,maxHeight){
+    let height =this.getDomHeight(dom);
+    
+    let page = pageList[pageList.length-1];
     const addNewPage=(pageList,dom,height,maxHeight)=>{
       let newPage={children:[],curHeight:0,maxHeight:maxHeight};
       pageList.push(newPage);
@@ -105,7 +102,7 @@ class TablePrint{
       return;
     }
 
-    if(dom.nodeName.toLocaleLowerCase()==='table'){
+    if(dom.nodeName.toLocaleLowerCase()==='table' && this.getThead(dom) ){
       let thead=this.getThead(dom);
       let tbody=this.getTBody(dom);
 
@@ -158,52 +155,70 @@ class TablePrint{
     
   }
 
-  debugPrint(){
-    let root = document.createElement('section');
-    root.className=DOM_ROOT;
-    root.id=DOM_ROOT;
-    this.state.targetDom.appendChild(root);
-
-    const borderConfig=[
-      ['red','green'],
-      ['blue','black']
-    ]
-    // let ref = this.state.targetDom.querySelector(`#${DOM_SRC_TABLE}`);
-    // let {landscape}=this.state;
-    let landscape=false;
-    const pageClass = landscape?'A4landscape':'A4'
-    for(let i=0;i<3;i++){
-      let page = document.createElement('section');
-      page.className=`${DOM_SRC_TABLE} ${pageClass}`;
-      // page.style.border=`5mm solid ${borderConfig[i%2][0]}`;
-      page.style.padding="5mm";
-
-      let content = document.createElement('div');
-      // content.style.border=`1px solid ${borderConfig[i%2][1]}`;
-      // content.style.width='100%';
-      // content.style.height='100%';
-      // content.className='content';
-      // content.innerText = `${i}:5mm bottom 5mm`;
-      // page.append(content);
-      page.innerText='1231'
-
-      root.appendChild(page);
+  //根据打印要求是横向还是竖向，切换@page内页面size配置
+  setPageLandscape(landscape){
+    var size;
+    var styles;
+    for(var i=0;i<document.styleSheets.length;i++){
+      var sheets = document.styleSheets[i];
+      for(var j=0;j<sheets.cssRules.length;j++){
+        styles = sheets.cssRules[j];
+        if(styles.style.size){
+          size = styles.style.size;
+          break;
+        }
+      }
+      if(size){
+        break;
+      }
     }
+    size = [...size.matchAll(/(\d+)/g)]
 
-    window.print();
+    size = size.map(item=>{
+      return +item[1];
+    });
 
-    // ref.style.display='none';
-   
+    if(landscape){
+      if(size[0]<size[1]){
+        size.reverse();
+      }
+    }else{
+      if(size[0]>size[1]){
+        size.reverse();
+      }
+    }
+    size = size.map(item=>{
+      return item+'mm';
+    })
+    styles.style.size=size.join(' ');
+
   }
-
+  // 打印：review是否打印前弹出预览查看框
   print(review=false){
+    let {landscape}=this.state;
+      
+    this.setPageLandscape(landscape);
+
     let printRoot = this.createPrintRootDom(review);
     this.showDialog(printRoot,review);
-
-
-    let {PAGE_HEIGHT,landscape}=this.state;
+    
     let ref = document.querySelector(`#${DOM_SRC_TABLE}`);
-    let pageHeight = landscape?this.mm2px(PAGE_HEIGHT-30-30):this.mm2px(PAGE_HEIGHT-30-15);
+
+    let headerBox = document.createElement('header');
+    let headerHeight=0;
+    if(this.state.header){
+      let domHeader = this.state.header.cloneNode(true);
+      headerBox.appendChild(domHeader);
+     
+      headerHeight =  this.preRenderGetHeight(headerBox);
+    }
+    
+    let pageHeight = landscape?this.mm2px(209-15-15-1):this.mm2px(296-15-15-1);
+    pageHeight -= headerHeight;
+
+    
+
+
     let pageList=[{children:[],curHeight:0,maxHeight:pageHeight}];
     for(let i=0;i<ref.children.length;i++){
       this.moveDom(ref.children[i],pageList,pageHeight)
@@ -225,28 +240,28 @@ class TablePrint{
 
       let deg = this.rand(35,89);
       let x = this.rand(15,60);
-      let y = this.rand(0,50)-25;
-
+      let h = water.offsetHeight||water.height||this.state.waterHeight;
       waterBox.style.transform=`rotate3d(0,0,1,${deg}deg)`;
       waterBox.style.left=`${x}%`;
-      waterBox.style.bottom='-'+y+'px';
+      waterBox.style.bottom='-'+h/2+'px';
     }
     
-    const pageClass = landscape?'A4landscape':'A4'
     for(let i=0;i<pageList.length;i++){
-      let page = document.createElement('section');
-      page.className=`${DOM_SRC_TABLE} ${pageClass}`;
 
-      let headerBox = document.createElement('div');
-      headerBox.className=`${DOM_HEADER}`;
-      let footerBox = document.createElement('div');
-      footerBox.className=`${DOM_FOOTER}`;
 
-      page.appendChild(headerBox);
-      page.appendChild(footerBox);
+      let a4 = document.createElement('section');
+      a4.className=`A4`;
+      let page = document.createElement('div');
+      page.className=`A4-content`;
+      a4.appendChild(page);
+
+      
+      let footerBox = document.createElement('footer');
+
+      
+     
       if(this.state.header){
-        let domHeader = this.state.header.cloneNode(true);
-        headerBox.appendChild(domHeader);
+        page.appendChild(headerBox.cloneNode(true));
       }
 
       pageList[i].children.forEach(child=>{
@@ -264,13 +279,14 @@ class TablePrint{
         innerText = innerText.replace('@total',pageList.length);
         domFooter.innerText=innerText;
         footerBox.appendChild(domFooter);
+        page.appendChild(footerBox);
       }
       if(i!=pageList.length-1){
         if(water){
           page.appendChild(waterBox.cloneNode(true));
         }
       }
-      this.dialog.querySelector(`#${DOM_ROOT}`).appendChild(page);
+      this.dialog.querySelector(`#${DOM_ROOT}`).appendChild(a4);
     }
     ref.style.display='none';
 
@@ -278,8 +294,6 @@ class TablePrint{
       this.doPrint();
       return;
     }
-
-
   }
 
   rand(min, max, seed) {
@@ -297,11 +311,14 @@ class TablePrint{
   }
 
   doPrint(){
+  
     let printDom = document.querySelector('#table-print-root');
     document.body.appendChild(printDom);
     this.closeDialog();
     window.print();
-    document.body.removeChild(printDom);
+    if(!this.state.debug){
+      document.body.removeChild(printDom);
+    }
     
   }
   showDialog(dom,review){
@@ -347,22 +364,26 @@ class TablePrint{
 
   }
   createPrintRootDom() {
-    const {landscape,children} = this.state;
-    const pageClass = landscape?'A4landscape':'A4'
+    const {children,landscape} = this.state;
+
     let root = document.createElement('section');
     root.className=DOM_ROOT;
     root.id=DOM_ROOT;
+    if(landscape){
+      root.setAttribute('landscape',true);
+    }else{
+      root.removeAttribute('landscape');
+    }
+
 
     let printSrc = document.createElement('section');
-    printSrc.className=`${DOM_SRC_TABLE} ${pageClass}`;
+    printSrc.className=DOM_SRC_TABLE;
     printSrc.id=DOM_SRC_TABLE;
     for(let i=0;i<children.length;i++){
       printSrc.appendChild(children[i].cloneNode(true));
     }
     root.appendChild(printSrc);
-
     return root;
-    // this.state.targetDom.appendChild(root);
   }
 }
 
