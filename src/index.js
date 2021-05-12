@@ -163,7 +163,7 @@ class TablePrint{
       var sheets = document.styleSheets[i];
       for(var j=0;j<sheets.cssRules.length;j++){
         styles = sheets.cssRules[j];
-        if(styles.style.size){
+        if(styles&&styles.constructor===CSSPageRule){
           size = styles.style.size;
           break;
         }

@@ -1,6 +1,6 @@
 {
   "name": "js-table-print",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "scripts": {
     "build": "cross-env env_package=prod webpack --config webpack.config.js",
     "build:dev": "cross-env env_package=dev webpack --config webpack.config.js",
