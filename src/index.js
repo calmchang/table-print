@@ -34,7 +34,6 @@ class TablePrint{
   
   getDomHeight(dom){
     let height = dom.offsetHeight;
-
     let currentStyle = dom.currentStyle||document.defaultView.getComputedStyle(dom);
     let marginTop = currentStyle['marginTop'].match(/(\d+)/g);
     marginTop = marginTop?+marginTop[0]:0;
@@ -58,7 +57,6 @@ class TablePrint{
   //计算这个dom绘制后会占用多少高度px
   preRenderGetHeight(dom) {
     let targetDom = document.querySelector(`#${DOM_SRC_TABLE}`);
-
     var tmpNode = document.createElement('div');
     tmpNode.style.cssText = `position:absolute;left:0px;top:0px;z-index:99;visibility:hidden`;
     tmpNode.appendChild(dom);
@@ -125,7 +123,9 @@ class TablePrint{
         if(page.curHeight + curH > maxHeight){
           if(tbody.children.length>1){
             curTable.tbody.removeChild(tr);
-            page.children.push(curTable.table);
+            if(curTable.tbody.children.length>0){
+              page.children.push(curTable.table);
+            }
             let newPage={children:[],curHeight:0,maxHeight:maxHeight};
             pageList.push(newPage);
             page = newPage;

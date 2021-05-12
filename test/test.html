@@ -18,27 +18,31 @@
 <script>
 window.onload=function(){
   var table=`
-    <h1 class="title">
-      产品申请单
-      <span>2021-01-01</span>
-    </h1>
-    <table >
-      <tbody>
-        <tr>
-          <td>申请人</td>
-          <td>测试人</td>
-          <td>申请人部门</td>
-          <td>测试部门</td>
-        </tr>
-        <tr>
-          <td>总额</td>
-          <td>￥123.00</td>
-          <td>备注</td>
-          <td>123123</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
+  <h1 class="title">
+    产品申请单
+    <span>2021-01-01</span>
+  </h1>
+  <table >
+    <tbody>
+      <tr>
+        <td>申请人</td>
+        <td>测试人</td>
+        <td>申请人部门</td>
+        <td>测试部门</td>
+      </tr>
+      <tr>
+        <td>总额</td>
+        <td>￥123.00</td>
+        <td>备注</td>
+        <td>123123</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <table>
+    <tbody><tr><td style="height:50px;">产品列表</td></tr></tbody>
+  </table>
+  <table>
     <thead>
       <tr>
         <th>产品编码</th>
@@ -53,73 +57,58 @@ window.onload=function(){
       @list
     </tbody>
   </table>
-    <hgroup>
-      <div>确认签字</div>
-      <table>
-        <tbody>
-          <tr>
-            <td>申请人</td>
-            <td></td>
-            <td>收单人</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>上级审批</td>
-            <td></td>
-            <td>CEO确认</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </hgroup>
-  
+
+
+  <hgroup style="padding:10px 0;border:1px solid #ccc;">
+    <div>这里的内容不要被分页切割1</div>
+    <div>这里的内容不要被分页切割2</div>
+    <div>这里的内容不要被分页切割3</div>
+    <div>这里的内容不要被分页切割4</div>
+    <div>这里的内容不要被分页切割5</div>
+  </hgroup>
+
+  <div style="page-break-before:always">插入一个强制分页</div>
     <table>
-    <thead>
-      <tr>
-        <th>产品编码2</th>
-        <th>产品名称</th>
-        <th>产品型号</th>
-        <th>单价(￥)</th>
-        <th>内采数量</th>
-        <th>总价(￥)</th>
-      </tr>
-    </thead>
-    <tbody>
-      @list
-    </tbody>
-  </table>
+      <tbody><tr><td style="height:50px;">签收人</td></tr></tbody>
+    </table>
 
-  <hgroup >
-      <div>确认签字2</div>
-      <table>
-        <thead></thead>
-        <tbody>
-          <tr>
-            <td>申请人</td>
-            <td></td>
-            <td>收单人</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>上级审批</td>
-            <td></td>
-            <td>CEO确认</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>上级审批</td>
-            <td></td>
-            <td>CEO确认</td>
-            <td></td>
-          </tr>
+    <table>
+      <tbody>
+        <tr style="height:100px;">
+          <td style="width:120px;">申请人</td>
+          <td></td>
+          <td style="width:120px;">收单人</td>
+          <td></td>
+        </tr>
+        <tr style="height:100px;">
+          <td>上级审批</td>
+          <td></td>
+          <td>CEO确认</td>
+          <td></td>
+        </tr>
+        <tr style="height:100px;">
+          <td>本人签字</td>
+          <td></td>
+          <td>签署日期</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
 
-        </tbody>
-      </table>
-    </hgroup>
-    `
+  <div style="margin-top:20px">这里的内容可以被分页切割1</div>
+  <div>这里的内容可以被分页切割2</div>
+  <div>这里的内容可以被分页切割3</div>
+  <div>这里的内容可以被分页切割4</div>
+  <div>这里的内容可以被分页切割5</div>
+  <div>这里的内容可以被分页切割6</div>
+  <div>这里的内容可以被分页切割7</div>
+  <div>这里的内容可以被分页切割8</div>
+  <div>这里的内容可以被分页切割9</div>
+  <div>这里的内容可以被分页切割10</div>
+  `
 
   let list='';
-  for(let i=0;i<15;i++){
+  for(let i=0;i<3;i++){
     var dom = `
       <tr>
         <td>${i}</td>
@@ -133,7 +122,7 @@ window.onload=function(){
       list+=dom;
   }
   table=table.replace('@list',list);
-  table=table.replace('@list',list);
+
   
   
   var domPrint = document.querySelector('#print');

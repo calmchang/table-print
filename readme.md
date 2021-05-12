@@ -7,6 +7,30 @@
 ### 简介
 js-table-print是一款智能打印插件，目标是处理表格的打印，实现自定义页头、页尾、水印、分页方式等
 
+
+### install    
+`npm install js-table-print`
+
+### usage  
+```javascript
+
+import TablePrint from 'js-table-print';
+
+let plugin = new TablePrint({
+  children:domTable,//需要打印的内容
+  header:domHeader,//每页的页头
+  footer:true,//每页的页号
+  water:true,//添加分页水印
+});
+setTimeout(()=>{
+  plugin.print(true);//弹出预览确认框
+},0)
+```
+
+
+### 预览  
+![review.jpg](http://img.vuedata.cn/table-print.gif)
+
 ### 环境支持  
 1、react  
 2、原生js+dom
@@ -15,28 +39,9 @@ js-table-print是一款智能打印插件，目标是处理表格的打印，实
 1、设定某些DOM节点组成一组，必须打印在同一张页面内，如果被切割则会重新分页打印。  
 2、提供页头和页尾样式，也可自定义样式。  
 3、提供分页出的水印样式，也可自定义样式。  
-4、可调整页边距  
-5、可设定横向或纵向打印  
-6、样式完全根据当前页面样式打印，无需再次单独导入css  
+4、可设定横向或纵向打印  
+5、样式完全根据当前页面样式打印，无需再次单独导入css  
 
-
-### 预览图  
-![review.jpg](http://img.vuedata.cn/table-print.gif)
-
-### install    
-`npm install js-table-print`
-
-### usage  
-```javascript
-let plugin = new TablePrint({
-  children:domTable,
-  footer:true,
-  water:true,
-});
-setTimeout(()=>{
-  plugin.print();
-},0)
-```
 
 ### with React  
 
@@ -198,96 +203,7 @@ setTimeout(()=>{
 
 ```
 
-### children元素的规范
 
-1、在表格绘制时，使用如下格式规范进行填充，其中如果没有表头也需要保留表头标签`<thead></thead>`
-2、可以给标签添加style或class样式
-```html
-<table>
-  <thead>
-    <tr>
-      <th>标题1</th>
-      <th>标题2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>列1</td>
-      <td>列2</td>
-    </tr>
-    <tr>
-      <td>列1</td>
-      <td>列2</td>
-    </tr>
-  </tbody>
-</table>
-```
-3、将一组需要始终保持在一个页面内打印的内容，放在一个dom下，比如，如果希望下面2个dom在打印时始终打印在一张A4纸上不被分开，则必须将他们放在一个DOM组下
-```html
-<section>
-  123123
-  123123
-</section>
-<section>
-  abc
-  abc
-</section>
-```
-修改后:
-```html
-<hgroup>
-  <section>
-    123123
-    123123
-  </section>
-  <section>
-    abc
-    abc
-  </section>
-</hgroup>
-```
-
-4、整个children的内容可以大致如下：
-```html
-<h1>标题</h1>
-<table>
-  <thead>
-    <tr>
-      <th>标题1</th>
-      <th>标题2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>列1</td>
-      <td>列2</td>
-    </tr>
-    <tr>
-      <td>列1</td>
-      <td>列2</td>
-    </tr>
-  </tbody>
-</table>
-<h3>分隔标题</h3>
-<!-- 这个hgroup内的内容打印时会确保打印在一张纸上 -->
-<hgroup> 
-  <table>
-    <thead></thead>
-    <tbody>
-      <tr>
-        <td>申请人</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>收款人</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</hgroup>
-
-
-```
 
 ### Config  
 参数|说明|类型|默认值
@@ -305,6 +221,14 @@ debug|调试模式，调试模式下会将表格打印的预览图追加到body�
 方法|说明|类型
 :-|:-|:-
 print|激活打印 review为true时会弹出预览框确认|(review?:boolean)
+
+
+
+### 常用CSS样式
+
+* page-break-inside: avoid; 不要将dom内的内容分页
+* page-break-before: alway; 在此DOM前插入一个分页
+* page-break-after: alway; 在此DOM后插入一个分页
 
 ### 开发者环境  
 node:10.15.0  
