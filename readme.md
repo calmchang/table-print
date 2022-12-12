@@ -1,3 +1,4 @@
+![Page Views Count](https://badges.toozhao.com/badges/01GM1ZJR5FMHJGGS7R8MS2M56Q/green.svg). 
 ![react](https://img.shields.io/badge/react-support-blue)
 ![js+dom](https://img.shields.io/badge/js+dom-support-red)
 ![vue](https://img.shields.io/badge/vue-support-success)
